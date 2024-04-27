@@ -1,7 +1,7 @@
 from app.models import db, ReviewImage, environment, SCHEMA
 from sqlalchemy.sql import text
 import random
-import requests
+from security import safe_requests
 
 # Adds a demo user, you can add other users here if you want
 
@@ -9,8 +9,7 @@ import requests
 def seed_reviewimages():
 
     for review_id in range(1, 117):
-        reviewImg = requests.get(
-            f"https://picsum.photos/300/300.jpg?random={random.randint(1,1000)}", timeout=60)
+        reviewImg = safe_requests.get(f"https://picsum.photos/300/300.jpg?random={random.randint(1,1000)}", timeout=60)
         if reviewImg.status_code == 200:
             newRevImg = reviewImg.url
         for _ in range(random.randint(1, 3)):

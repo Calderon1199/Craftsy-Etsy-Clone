@@ -1,15 +1,14 @@
 from app.models import db, ProductImage, environment, SCHEMA
 from sqlalchemy.sql import text
 import random
-import requests
+from security import safe_requests
 
 
 def seed_product_images():
 
     for product_id in range(1, 40):
         # Generate 4 images with preview value as false
-        fImage = requests.get(
-            f"https://picsum.photos/600/600.jpg?random={random.randint(501,1001)}", timeout=60)
+        fImage = safe_requests.get(f"https://picsum.photos/600/600.jpg?random={random.randint(501,1001)}", timeout=60)
         if fImage.status_code == 200:
             falseImageUrl = fImage.url
         for _ in range(4):
@@ -18,8 +17,7 @@ def seed_product_images():
             db.session.add(new_false_preview_image)
 
         # Generate 1 image with preview true
-        image = requests.get(
-            f"https://picsum.photos/600/600.jpg?random={random.randint(1,500)}", timeout=60)
+        image = safe_requests.get(f"https://picsum.photos/600/600.jpg?random={random.randint(1,500)}", timeout=60)
 
         if image.status_code == 200:
             true_image_url = image.url
